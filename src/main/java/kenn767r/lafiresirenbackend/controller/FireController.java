@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/fires")
 public class FireController {
@@ -22,4 +24,13 @@ public class FireController {
         Fire created = fireService.registerFire(latitude, longitude);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
+
+    @GetMapping
+    public ResponseEntity<List<Fire>> getFires(@RequestParam(required = false) String status) {
+        if ("active".equalsIgnoreCase(status)) {
+            return ResponseEntity.ok(fireService.getActiveFires());
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
 }

@@ -46,4 +46,15 @@ class FireServiceTest {
         verify(sirenRepository).saveAll(anyList());
         verify(fireRepository).save(any(Fire.class));
     }
+
+    @Test
+    void shouldCalculateKnownDistanceBetweenSantaMonicaAndVenice() {
+        double lat1 = 34.0100, lon1 = -118.4969; // Santa Monica Pier
+        double lat2 = 33.9850, lon2 = -118.4695; // Venice Beach
+
+        double distance = fireService.calculateDistanceKM(lat1, lon1, lat2, lon2);
+
+        assertTrue(distance > 3.0 && distance < 4.0,
+                "Expected ~3.5 km, got: " + distance);
+    }
 }

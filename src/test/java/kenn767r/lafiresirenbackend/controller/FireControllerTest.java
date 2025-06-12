@@ -14,8 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(FireController.class)
@@ -61,4 +60,24 @@ class FireControllerTest {
                 .andExpect(jsonPath("$[0].active").value(true))
                 .andExpect(jsonPath("$[0].latitude").value(34.05));
     }
+
+    @Test
+    void shouldCloseFireSuccessfully() throws Exception {
+        Fire closedFire = new Fire(1L, 34.00, -118.50, LocalDateTime.now(), false, Collections.emptyList());
+
+        when(fireService.closeFire(1L)).thenReturn(closedFire);
+
+        mockMvc.perform(put("/fires/1/closure"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.active").value(false));
+    }
+
+    @Test
+    void shouldReturnNotFoundIfFireDoesNotExist() throws Exception {
+        when(fireService.closeFire(999L)).thenThrow(new RuntimeException("Fire not found"));
+
+        mockMvc.perform(put("/fires/999/closure"))
+                .andExpect(status().isNotFound());
+    }
+
 }

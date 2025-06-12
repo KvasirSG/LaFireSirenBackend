@@ -8,6 +8,7 @@ import kenn767r.lafiresirenbackend.repository.SirenRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,4 +58,26 @@ class FireServiceTest {
         assertTrue(distance > 3.0 && distance < 4.0,
                 "Expected ~3.5 km, got: " + distance);
     }
+    @Test
+    void shouldCloseFireAndOnlyResetSirensNotUsedElsewhere() {
+        Siren siren1 = new Siren(1L, "Siren A", 34.01, -118.49, SirenStatus.DANGER);
+        Siren siren2 = new Siren(2L, "Siren B", 34.02, -118.48, SirenStatus.DANGER);
+
+        Siren siren2Copy = new Siren(2L, "Siren B", 34.02, -118.48, SirenStatus.DANGER);
+
+        Fire fireToClose = new Fire(1L, 34.00, -118.50, LocalDateTime.now(), true, List.of(siren1, siren2));
+        Fire otherActiveFire = new Fire(2L, 34.03, -118.47, LocalDateTime.now(), true, List.of(siren2Copy));
+
+        when(fireRepository.findById(1L)).thenReturn(java.util.Optional.of(fireToClose));
+        when(fireRepository.findByActiveTrue()).thenReturn(List.of(otherActiveFire, fireToClose));
+        when(fireRepository.save(any(Fire.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        fireService.closeFire(1L);
+
+        assertEquals(SirenStatus.SAFE, siren1.getStatus());   // Not used elsewhere
+        assertEquals(SirenStatus.DANGER, siren2.getStatus()); // Still used by another active fire
+        assertFalse(fireToClose.isActive());
+    }
+
+
 }

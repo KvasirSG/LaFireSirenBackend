@@ -33,4 +33,15 @@ public class FireController {
         return ResponseEntity.badRequest().build();
     }
 
+    @PutMapping("/{id}/closure")
+    public ResponseEntity<Fire> closeFire(@PathVariable Long id) {
+        try {
+            Fire closed = fireService.closeFire(id);
+            return ResponseEntity.ok(closed);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }

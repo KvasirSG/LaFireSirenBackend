@@ -66,4 +66,27 @@ public class FireService {
         return fireRepository.findByActiveTrue();
     }
 
+    public Fire closeFire(Long fireId) {
+        Fire fire = fireRepository.findById(fireId)
+                .orElseThrow(() -> new RuntimeException("Fire not found with ID: " + fireId));
+
+        fire.setActive(false);
+
+        List<Siren> sirens = fire.getTriggeredSirens();
+
+        for (Siren siren : sirens) {
+            boolean isUsedInOtherFires = fireRepository.findByActiveTrue().stream()
+                    .filter(f -> !f.getId().equals(fire.getId())) // skip the one we're closing
+                    .flatMap(f -> f.getTriggeredSirens().stream()) // pull all sirens from other active fires
+                    .anyMatch(s -> s.getId().equals(siren.getId())); // check if this siren is used elsewhere
+
+            if (!isUsedInOtherFires) {
+                siren.setStatus(SirenStatus.SAFE);
+            }
+        }
+
+        sirenRepository.saveAll(sirens);
+        return fireRepository.save(fire);
+    }
+
 }

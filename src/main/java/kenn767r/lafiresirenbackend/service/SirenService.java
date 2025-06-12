@@ -35,4 +35,11 @@ public class SirenService {
         return sirenRepository.save(existing);
     }
 
+    public void deleteSiren(Long id) {
+        if (!sirenRepository.existsById(id)) {
+            throw new RuntimeException("Siren not found with id: " + id);
+        }
+        sirenRepository.deleteById(id);
+    }
+
 }

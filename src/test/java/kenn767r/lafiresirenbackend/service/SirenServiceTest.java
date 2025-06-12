@@ -60,5 +60,16 @@ class SirenServiceTest {
         assertTrue(result.isDisabled());
     }
 
+    @Test
+    void shouldDeleteSirenById() {
+        Long sirenId = 1L;
+        when(sirenRepository.existsById(sirenId)).thenReturn(true);
+
+        sirenService.deleteSiren(sirenId);
+
+        verify(sirenRepository, times(1)).deleteById(sirenId);
+    }
+
+
 }
 

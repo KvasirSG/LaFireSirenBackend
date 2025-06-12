@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Optional;
+
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
 class SirenServiceTest {
@@ -39,5 +41,24 @@ class SirenServiceTest {
         assertEquals("Santa Monica 1", result.getName());
         verify(sirenRepository, times(1)).save(input);
     }
+
+    @Test
+    void shouldUpdateSirenSuccessfully() {
+        Long id = 1L;
+        Siren existing = new Siren(id, "Old Name", 34.01, -118.49, SirenStatus.SAFE, false);
+
+        Siren updated = new Siren(id, "Updated Name", 34.05, -118.50, SirenStatus.DANGER, true);
+
+        when(sirenRepository.findById(id)).thenReturn(Optional.of(existing));
+        when(sirenRepository.save(any(Siren.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Siren result = sirenService.updateSiren(id, updated);
+
+        assertEquals("Updated Name", result.getName());
+        assertEquals(34.05, result.getLatitude());
+        assertEquals(SirenStatus.DANGER, result.getStatus());
+        assertTrue(result.isDisabled());
+    }
+
 }
 

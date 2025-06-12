@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 
 @WebMvcTest(SirenController.class)
@@ -66,4 +67,18 @@ class SirenControllerTest {
                 .andExpect(jsonPath("$[1].status").value("DANGER"));
     }
 
+    @Test
+    void shouldUpdateSirenViaPutRequest() throws Exception {
+        Siren updated = new Siren(1L, "Updated Siren", 34.10, -118.40, SirenStatus.DANGER, true);
+
+        when(sirenService.updateSiren(eq(1L), any(Siren.class))).thenReturn(updated);
+
+        mockMvc.perform(put("/sirens/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updated)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Updated Siren"))
+                .andExpect(jsonPath("$.status").value("DANGER"))
+                .andExpect(jsonPath("$.disabled").value(true));
+    }
 }

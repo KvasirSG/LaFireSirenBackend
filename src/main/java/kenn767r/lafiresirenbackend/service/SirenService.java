@@ -22,4 +22,17 @@ public class SirenService {
         return sirenRepository.findAll();
     }
 
+    public Siren updateSiren(Long id, Siren updated) {
+        Siren existing = sirenRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Siren not found with id " + id));
+
+        existing.setName(updated.getName());
+        existing.setLatitude(updated.getLatitude());
+        existing.setLongitude(updated.getLongitude());
+        existing.setStatus(updated.getStatus());
+        existing.setDisabled(updated.isDisabled());
+
+        return sirenRepository.save(existing);
+    }
+
 }

@@ -30,4 +30,11 @@ public class SirenController {
         return ResponseEntity.ok(sirens);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Siren> updateSiren(@PathVariable Long id, @RequestBody Siren updatedSiren) {
+        Siren siren = sirenService.updateSiren(id, updatedSiren);
+        return ResponseEntity.ok(siren);
+    }
+
+
 }

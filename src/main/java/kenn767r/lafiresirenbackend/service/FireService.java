@@ -77,8 +77,8 @@ public class FireService {
         for (Siren siren : sirens) {
             boolean isUsedInOtherFires = fireRepository.findByActiveTrue().stream()
                     .filter(f -> !f.getId().equals(fire.getId())) // skip the one we're closing
-                    .flatMap(f -> f.getTriggeredSirens().stream())
-                    .anyMatch(s -> s.getId().equals(siren.getId()));
+                    .flatMap(f -> f.getTriggeredSirens().stream()) // pull all sirens from other active fires
+                    .anyMatch(s -> s.getId().equals(siren.getId())); // check if this siren is used elsewhere
 
             if (!isUsedInOtherFires) {
                 siren.setStatus(SirenStatus.SAFE);

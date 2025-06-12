@@ -16,10 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 
 @WebMvcTest(SirenController.class)
@@ -81,4 +79,18 @@ class SirenControllerTest {
                 .andExpect(jsonPath("$.status").value("DANGER"))
                 .andExpect(jsonPath("$.disabled").value(true));
     }
+
+    @Test
+    void shouldDeleteSirenSuccessfully() throws Exception {
+        Long sirenId = 1L;
+
+        // No need to mock service return, just verify it's called
+        doNothing().when(sirenService).deleteSiren(sirenId);
+
+        mockMvc.perform(delete("/sirens/{id}", sirenId))
+                .andExpect(status().isNoContent());
+
+        verify(sirenService, times(1)).deleteSiren(sirenId);
+    }
+
 }

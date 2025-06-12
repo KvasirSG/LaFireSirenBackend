@@ -16,7 +16,10 @@ public class FireService {
 
     private final FireRepository fireRepository;
     private final SirenRepository sirenRepository;
-
+    /**
+     * Average radius of the Earth in kilometers.
+     * Used in Haversine formula for calculating distance between two coordinates.
+     */
     private static final int EARTH_RADIUS_KM = 6371;
 
     public FireService(FireRepository fireRepository, SirenRepository sirenRepository) {
@@ -45,7 +48,7 @@ public class FireService {
         return fireRepository.save(fire);
     }
 
-    private double calculateDistanceKM(double lat1, double lon1, double lat2, double lon2) {
+    double calculateDistanceKM(double lat1, double lon1, double lat2, double lon2) {
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
         double rLat1 = Math.toRadians(lat1);
@@ -58,4 +61,9 @@ public class FireService {
 
         return EARTH_RADIUS_KM * c;
     }
+
+    public List<Fire> getActiveFires() {
+        return fireRepository.findByActiveTrue();
+    }
+
 }

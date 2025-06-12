@@ -11,8 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -38,5 +40,25 @@ class FireControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.latitude").value(34.01))
                 .andExpect(jsonPath("$.longitude").value(-118.49));
+    }
+
+    @Test
+    void shouldReturnListOfActiveFires() throws Exception {
+        Fire activeFire = new Fire(
+                1L,
+                34.05,
+                -118.49,
+                LocalDateTime.now(),
+                true,
+                Collections.emptyList()
+        );
+
+        when(fireService.getActiveFires()).thenReturn(List.of(activeFire));
+
+        mockMvc.perform(get("/fires").param("status", "active"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].active").value(true))
+                .andExpect(jsonPath("$[0].latitude").value(34.05));
     }
 }

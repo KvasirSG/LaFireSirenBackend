@@ -18,8 +18,10 @@ public class Siren {
     private String name;
     private double latitude;
     private double longitude;
-    private boolean disabled;
 
     @Enumerated(EnumType.STRING)
     private SirenStatus status;
+
+    @Column(nullable = false)
+    private boolean disabled = false;
 }

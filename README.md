@@ -3,4 +3,4 @@
 
 Kenneth Heimann - kenn767r@stud.kea.dk
 
-Brug insert_sirens_la.sql under resources til at indsætte sirener.
+Brug [insert_sirens_la.sql](https://github.com/KvasirSG/LaFireSirenBackend/blob/develop/src/main/resources/insert_sirens_la.sql) under resources til at indsætte sirener.

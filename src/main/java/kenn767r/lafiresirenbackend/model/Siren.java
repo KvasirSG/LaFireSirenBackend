@@ -1,0 +1,27 @@
+package kenn767r.lafiresirenbackend.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Siren {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private double latitude;
+    private double longitude;
+
+    @Enumerated(EnumType.STRING)
+    private SirenStatus status;
+
+    @Column(nullable = false)
+    private boolean disabled = false;
+}

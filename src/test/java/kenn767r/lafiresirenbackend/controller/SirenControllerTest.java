@@ -12,9 +12,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 
 @WebMvcTest(SirenController.class)
 class SirenControllerTest {
@@ -43,4 +47,20 @@ class SirenControllerTest {
                 .andExpect(jsonPath("$.name").value("Test Siren"))
                 .andExpect(jsonPath("$.status").value("SAFE"));
     }
+    @Test
+    void shouldReturnListOfSirens() throws Exception {
+        List<Siren> sirens = List.of(
+                new Siren(1L, "Siren A", 34.01, -118.49, SirenStatus.SAFE),
+                new Siren(2L, "Siren B", 34.05, -118.47, SirenStatus.DANGER)
+        );
+
+        when(sirenService.getAllSirens()).thenReturn(sirens);
+
+        mockMvc.perform(get("/sirens"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].name").value("Siren A"))
+                .andExpect(jsonPath("$[1].status").value("DANGER"));
+    }
+
 }

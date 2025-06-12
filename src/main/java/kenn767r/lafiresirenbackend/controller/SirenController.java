@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/sirens")
 public class SirenController {
@@ -21,4 +23,11 @@ public class SirenController {
         Siren created = sirenService.createSiren(siren);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
+
+    @GetMapping
+    public ResponseEntity<List<Siren>> getAllSirens() {
+        List<Siren> sirens = sirenService.getAllSirens();
+        return ResponseEntity.ok(sirens);
+    }
+
 }

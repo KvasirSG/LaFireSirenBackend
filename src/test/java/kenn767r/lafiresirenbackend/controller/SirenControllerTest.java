@@ -37,8 +37,8 @@ class SirenControllerTest {
 
     @Test
     void shouldCreateSirenSuccessfully() throws Exception {
-        Siren input = new Siren(null, "Test Siren", 34.01, -118.49, SirenStatus.SAFE);
-        Siren saved = new Siren(1L, "Test Siren", 34.01, -118.49, SirenStatus.SAFE);
+        Siren input = new Siren(null, "Test Siren", 34.01, -118.49, SirenStatus.SAFE, false);
+        Siren saved = new Siren(1L, "Test Siren", 34.01, -118.49, SirenStatus.SAFE, false);
 
         when(sirenService.createSiren(any(Siren.class))).thenReturn(saved);
 
@@ -53,8 +53,8 @@ class SirenControllerTest {
     @Test
     void shouldReturnListOfSirens() throws Exception {
         List<Siren> sirens = List.of(
-                new Siren(1L, "Siren A", 34.01, -118.49, SirenStatus.SAFE),
-                new Siren(2L, "Siren B", 34.05, -118.47, SirenStatus.DANGER)
+                new Siren(1L, "Siren A", 34.01, -118.49, SirenStatus.SAFE, false),
+                new Siren(2L, "Siren B", 34.05, -118.47, SirenStatus.DANGER, false)
         );
 
         when(sirenService.getAllSirens()).thenReturn(sirens);

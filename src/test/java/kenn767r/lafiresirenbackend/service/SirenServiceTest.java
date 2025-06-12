@@ -27,8 +27,8 @@ class SirenServiceTest {
 
     @Test
     void shouldCreateNewSiren() {
-        Siren input = new Siren(null, "Santa Monica 1", 34.01, -118.49, SirenStatus.SAFE);
-        Siren saved = new Siren(1L, "Santa Monica 1", 34.01, -118.49, SirenStatus.SAFE);
+        Siren input = new Siren(null, "Santa Monica 1", 34.01, -118.49, SirenStatus.SAFE, false);
+        Siren saved = new Siren(1L, "Santa Monica 1", 34.01, -118.49, SirenStatus.SAFE, false);
 
 
         when(sirenRepository.save(input)).thenReturn(saved);

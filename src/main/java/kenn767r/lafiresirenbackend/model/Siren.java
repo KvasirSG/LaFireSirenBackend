@@ -21,4 +21,7 @@ public class Siren {
 
     @Enumerated(EnumType.STRING)
     private SirenStatus status;
+
+    @Column(nullable = false)
+    private boolean disabled = false;
 }

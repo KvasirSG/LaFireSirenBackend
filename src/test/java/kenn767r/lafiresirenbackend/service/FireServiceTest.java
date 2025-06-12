@@ -35,8 +35,9 @@ class FireServiceTest {
 
     @Test
     void shouldRegisterFireAndActivateNearbySirens() {
-        Siren nearSiren = new Siren(1L, "Siren A", 34.01, -118.49, SirenStatus.SAFE);
-        Siren farSiren = new Siren(2L, "Siren B", 34.90, -119.50, SirenStatus.SAFE);
+        Siren nearSiren = new Siren(1L, "Siren A", 34.01, -118.49, SirenStatus.SAFE, false);
+        Siren farSiren = new Siren(2L, "Siren B", 34.90, -119.50, SirenStatus.SAFE, false);
+
 
         when(sirenRepository.findAll()).thenReturn(List.of(nearSiren, farSiren));
         when(fireRepository.save(any(Fire.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -63,10 +64,11 @@ class FireServiceTest {
     }
     @Test
     void shouldCloseFireAndOnlyResetSirensNotUsedElsewhere() {
-        Siren siren1 = new Siren(1L, "Siren A", 34.01, -118.49, SirenStatus.DANGER);
-        Siren siren2 = new Siren(2L, "Siren B", 34.02, -118.48, SirenStatus.DANGER);
+        Siren siren1 = new Siren(1L, "Siren A", 34.01, -118.49, SirenStatus.DANGER, false);
+        Siren siren2 = new Siren(2L, "Siren B", 34.02, -118.48, SirenStatus.DANGER, false);
 
-        Siren siren2Copy = new Siren(2L, "Siren B", 34.02, -118.48, SirenStatus.DANGER);
+        Siren siren2Copy = new Siren(2L, "Siren B", 34.02, -118.48, SirenStatus.DANGER, false);
+
 
         Fire fireToClose = new Fire(1L, 34.00, -118.50, LocalDateTime.now(), true, List.of(siren1, siren2));
         Fire otherActiveFire = new Fire(2L, 34.03, -118.47, LocalDateTime.now(), true, List.of(siren2Copy));
